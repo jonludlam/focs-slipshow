@@ -1,0 +1,158 @@
+x-ocaml:not(:defined) {
+  display: block;
+  white-space: pre-wrap;
+  padding: 4px 0.3em 4px 48px;
+  line-height: 1.4em;
+  font-family: monospace;
+  font-size: 0.8em;
+}
+
+pre {
+  display: block;
+  white-space: pre-wrap;
+  padding: 4px 0.3em 4px 48px;
+  line-height: 1.4em;
+  font-family: monospace;
+  font-size: 1.2em;
+}
+
+.hidden {
+    display: none;
+}
+
+.lefthalf {
+    position: relative;
+    width: 45%;
+    float: left;
+    margin-right: 5%;
+}
+.righthalf {
+    width: 45%;
+    float: right;
+}
+
+.outline {
+    border: 2px solid black;
+    padding: 0.5em;
+    margin: 0.5em;
+    text-size-adjust: 80%;
+}
+
+
+  .nicetable table th {
+      padding: 12px 15px;
+  }
+
+  .nicetable table td {
+      padding: 10px 15px;
+  }
+
+  .srr {
+    margin-top: 1em;
+  }
+
+  .srr li {
+    margin-top: 0.3em;
+    list-style-type: none;
+  }
+
+          /* Callout component - can be positioned anywhere */
+        .callout {
+            position: absolute;
+            width: 350px;
+            background: linear-gradient(135deg, #1e90ff, #0080ff);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            font-size: 1.6rem;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(30, 144, 255, 0.3);
+            z-index: 10;
+        }
+
+        /* Arrow directions */
+        .callout.arrow-left::before {
+            content: "";
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-right: 15px solid #1e90ff;
+        }
+
+        .callout.arrow-right::before {
+            content: "";
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-left: 15px solid #1e90ff;
+        }
+
+        .callout.arrow-top::before {
+            content: "";
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 15px solid #1e90ff;
+        }
+
+        .callout.arrow-bottom::before {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 15px solid #1e90ff;
+        }
+
+        /* Predefined positions for easy use */
+        .callout.top-right {
+            top: 100px;
+            right: 60px;
+        }
+
+        .callout.middle-right {
+            top: 50%;
+            right: 60px;
+            transform: translateY(-50%);
+        }
+
+        .callout.bottom-right {
+            bottom: 60px;
+            right: 60px;
+        }
+
+        .callout.top-left {
+            top: 100px;
+            left: 60px;
+        }
+
+        .callout.middle-left {
+            top: 50%;
+            left: 60px;
+            transform: translateY(-50%);
+        }
+
+        .callout.bottom-left {
+            bottom: 60px;
+            left: 60px;
+        }
+
