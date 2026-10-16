@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FoCS Stepper</title>
+<style>
+  :root {
+    --bg: #fbfaf7; --card: #ffffff; --ink: #1f1d1a; --muted: #6b665e; --rule: #e3dfd6;
+    --accent: #8a3b12; --redex: #fde68a; --reduct: #bbf7d0; --good: #15803d; --bad: #b91c1c;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #17161a; --card: #201f24; --ink: #ece9e3; --muted: #a39e95; --rule: #34323a;
+      --accent: #f0a46f; --redex: #6b5310; --reduct: #14532d; --good: #4ade80; --bad: #f87171;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #17161a; --card: #201f24; --ink: #ece9e3; --muted: #a39e95; --rule: #34323a;
+    --accent: #f0a46f; --redex: #6b5310; --reduct: #14532d; --good: #4ade80; --bad: #f87171;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  .lede { color: var(--muted); margin: 0 0 20px; max-width: 70ch; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  @media (min-width: 860px) { .grid { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); } }
+  .card { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 14px; }
+  label { font-size: 0.85rem; color: var(--muted); }
+  select, textarea, input[type=text] { font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--rule); border-radius: 6px; }
+  select { padding: 4px 6px; }
+  textarea { width: 100%; min-height: 230px; font-family: var(--mono); font-size: 13.5px; padding: 8px; resize: vertical; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: 8px 0; }
+  button { font: inherit; font-size: 0.9rem; padding: 5px 12px; border-radius: 6px; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  button:disabled { opacity: 0.45; cursor: default; }
+  .trace { font-family: var(--mono); font-size: 13.5px; margin: 0; padding: 0; list-style: none; overflow-x: auto; }
+  .trace li { padding: 3px 0; white-space: pre; border-bottom: 1px dashed var(--rule); }
+  .trace li .arrow { color: var(--muted); display: inline-block; width: 1.6em; }
+  .redex { background: var(--redex); border-radius: 3px; }
+  .reduct { background: var(--reduct); border-radius: 3px; }
+  .status { font-size: 0.85rem; color: var(--muted); }
+  .predict { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--rule); }
+  .predict input { width: 100%; font-family: var(--mono); font-size: 13.5px; padding: 6px 8px; }
+  .verdict { font-size: 0.9rem; margin-top: 6px; min-height: 1.4em; }
+  .verdict.good { color: var(--good); } .verdict.bad { color: var(--bad); }
+  .error { color: var(--bad); font-family: var(--mono); font-size: 13px; white-space: pre-wrap; }
+  .notes { font-size: 0.85rem; color: var(--muted); margin-top: 18px; }
+  .notes li { margin: 2px 0; }
+  kbd { font-family: var(--mono); font-size: 0.8em; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: 0 4px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Stepping OCaml, in the browser</h1>
+  <p class="lede">Kenichi Asai's stepper (Ochanomizu), compiled with js_of_ocaml and
+    running entirely in this page. Pick an example from the notes or write
+    your own, then step through it. With <em>predict</em> on, you say what
+    the next line is before you see it. The <span class="redex">yellow</span>
+    part is what reduces next, and the <span class="reduct">green</span>
+    part is what it became.</p>
+
+  <div class="grid">
+    <section class="card">
+      <div class="row">
+        <label for="example">Example</label>
+        <select id="example"></select>
+      </div>
+      <textarea id="src" spellcheck="false" aria-label="OCaml program"></textarea>
+      <div class="row">
+        <button class="primary" id="run">Step it</button>
+        <label><input type="checkbox" id="calls" checked> function calls only</label>
+        <label><input type="checkbox" id="predict" checked> predict</label>
+      </div>
+      <p class="status">The last <code>let</code> is the expression that's stepped. Programs must
+        be closed and well typed. The standard library's <code>List</code> isn't available.</p>
+    </section>
+
+    <section class="card">
+      <div class="row">
+        <button id="back" title="Back (←)">← Back</button>
+        <button id="next" class="primary" title="Next (→)">Next →</button>
+        <button id="all">Show all</button>
+        <span class="status" id="count"></span>
+      </div>
+      <div id="error" class="error"></div>
+      <ol class="trace" id="trace"></ol>
+      <div class="predict" id="predictBox" hidden>
+        <label for="guess">What's the next line? Type it, or just think, then press
+          <kbd>Enter</kbd>.</label>
+        <input type="text" id="guess" spellcheck="false" autocomplete="off">
+        <div class="verdict" id="verdict"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="notes">
+    <strong>Known limits of the stepper</strong>
+    <ul>
+      <li>Arguments are evaluated right to left, as OCaml does. So in
+        <code>preorder</code> the right subtree is visited first (see that example).</li>
+      <li><code>while</code>, <code>for</code>, mutable fields and <code>lazy</code> aren't
+        supported, and a <code>function</code> with a <code>when</code> guard is shown wrongly.</li>
+      <li>It adds more parentheses than the notes use. The predict check ignores spaces and
+        parentheses when it compares your line.</li>
+    </ul>
+  </div>
+</main>
+
+<script src="stepper_web.js"></script>
+<script>
+const EXAMPLES = {
+  "nsum (lecture 2)": `let rec nsum n =
+  if n = 0 then 0 else n + nsum (n - 1)
+
+let r = nsum 3`,
+  "summing (lecture 2)": `let rec summing n total =
+  if n = 0 then total else summing (n - 1) (n + total)
+
+let r = summing 3 0`,
+  "nrev (lecture 3)": `let rec append xs ys = match xs with
+  | [] -> ys
+  | x :: xs -> x :: append xs ys
+
+let rec nrev = function
+  | [] -> []
+  | x :: xs -> append (nrev xs) [x]
+
+let r = nrev [1; 2; 3]`,
+  "rev_app (lecture 3)": `let rec rev_app xs ys = match xs with
+  | [] -> ys
+  | x :: xs -> rev_app xs (x :: ys)
+
+let r = rev_app [1; 2; 3] []`,
+  "change with exceptions (lecture 6)": `exception Change
+
+let rec change till amt =
+  match till, amt with
+  | _, 0 -> []
+  | [], _ -> raise Change
+  | c :: till, amt ->
+      if amt < 0 then raise Change
+      else try c :: change (c :: till) (amt - c)
+           with Change -> change till amt
+
+let r = change [5; 2] 6`,
+  "get 2 (from 6) (lecture 9)": `type 'a seq = Nil | Cons of 'a * (unit -> 'a seq)
+
+let rec from k = Cons (k, fun () -> from (k + 1))
+
+let rec get n s =
+  match n, s with
+  | 0, _ -> []
+  | _, Nil -> []
+  | n, Cons (x, xf) -> x :: get (n - 1) (xf ())
+
+let r = get 2 (from 6)`,
+  "preorder (lecture 7: right to left!)": `type 'a tree = Lf | Br of 'a * 'a tree * 'a tree
+
+let rec append xs ys = match xs with
+  | [] -> ys
+  | x :: xs -> x :: append xs ys
+
+let rec preorder = function
+  | Lf -> []
+  | Br (v, t1, t2) -> append [v] (append (preorder t1) (preorder t2))
+
+let r = preorder (Br ("A", Br ("B", Lf, Lf), Br ("C", Lf, Lf)))`,
+};
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
+const mark = (text, [a, b], cls) =>
+  esc(text.slice(0, a)) + `<span class="${cls}">` + esc(text.slice(a, b)) + "</span>" + esc(text.slice(b));
+const norm = (s) => s.replace(/[\s()]/g, "").replace(/^letr=/, "");
+
+let lines = [];   // [{text, redex, reduct}] : text shown, with spans
+let shown = 0;    // how many lines are visible
+
+function build(steps, callsOnly) {
+  const pick = callsOnly ? steps.filter((s) => s.call) : steps;
+  if (pick.length === 0) return [];
+  const out = pick.map((s) => ({ text: s.before, redex: s.redex, reduct: null }));
+  const last = steps[steps.length - 1];
+  out.push({ text: last.after, redex: null, reduct: last.reduct });
+  // When only calls are shown, highlight the newest line's call; the green
+  // reduct is shown only in full mode, where each line follows the one before.
+  if (!callsOnly) {
+    for (let i = 1; i < out.length; i++) out[i].reduct = steps[i - 1].reduct;
+  }
+  return out;
+}
+
+function render() {
+  const ol = $("trace");
+  ol.innerHTML = "";
+  lines.slice(0, shown).forEach((l, i) => {
+    const li = document.createElement("li");
+    let html = esc(l.text);
+    const newest = i === shown - 1;
+    if (newest && l.redex && shown < lines.length) html = mark(l.text, l.redex, "redex");
+    else if (l.reduct && i > 0 && !$("calls").checked) html = mark(l.text, l.reduct, "reduct");
+    li.innerHTML = `<span class="arrow">${i === 0 ? "" : "→"}</span>` + html;
+    ol.appendChild(li);
+  });
+  const total = lines.length;
+  $("count").textContent = total ? `line ${shown} of ${total}` : "";
+  $("back").disabled = shown <= 1;
+  $("next").disabled = shown >= total;
+  $("all").disabled = shown >= total;
+  const asking = $("predict").checked && total && shown < total;
+  $("predictBox").hidden = !asking;
+  $("verdict").textContent = "";
+  $("verdict").className = "verdict";
+  if (asking) { $("guess").value = ""; }
+}
+
+function run() {
+  $("error").textContent = "";
+  lines = []; shown = 0;
+  const r = globalThis.focsStep($("src").value);
+  if (r.error) { $("error").textContent = r.error; render(); return; }
+  lines = build(Array.from(r), $("calls").checked);
+  if (!lines.length) { $("error").textContent = "No steps: is the last item a let binding something to compute?"; }
+  shown = lines.length ? 1 : 0;
+  render();
+  if (!$("predictBox").hidden) $("guess").focus();
+}
+
+function next() {
+  if (shown >= lines.length) return;
+  shown++;
+  render();
+  if (!$("predictBox").hidden) $("guess").focus();
+}
+
+function reveal() {
+  const want = lines[shown] && lines[shown].text;
+  const g = $("guess").value.trim();
+  if (g && want) {
+    const ok = norm(g) === norm(want);
+    shown++;
+    render();
+    $("verdict").textContent = ok ? "✓ That's it." : "✗ Not quite: compare your line with the one just shown.";
+    $("verdict").className = "verdict " + (ok ? "good" : "bad");
+    if (!$("predictBox").hidden) { /* keep the verdict visible while asking the next one */ }
+  } else next();
+}
+
+const sel = $("example");
+for (const k of Object.keys(EXAMPLES)) sel.add(new Option(k, k));
+sel.onchange = () => { $("src").value = EXAMPLES[sel.value]; run(); };
+$("run").onclick = run;
+$("calls").onchange = run;
+$("predict").onchange = render;
+$("next").onclick = () => ($("predictBox").hidden ? next() : reveal());
+$("back").onclick = () => { if (shown > 1) { shown--; render(); } };
+$("all").onclick = () => { shown = lines.length; render(); };
+$("guess").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); reveal(); } });
+document.addEventListener("keydown", (e) => {
+  if (e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT") return;
+  if (e.key === "ArrowRight") $("next").click();
+  if (e.key === "ArrowLeft") $("back").click();
+});
+$("src").value = EXAMPLES[sel.value];
+run();
+</script>
+</body>
+</html>
