@@ -5,13 +5,18 @@
 
    The notes do say where 0 goes ("non-negative", so the first list), but
    students misread it often enough that it needs a test of its own.  The
-   notes don't say whether the order of the input must be kept: the tests
-   that need order are marked Decision (README.md).
+   notes don't say whether the order of the input must be kept: order is now
+   required (D5 below).
 
    This follows the lecture's unzip / conspair / revUnzip pattern (building a
    pair of results), so the natural solutions are a recursive one with
    let (ps, ns) = ... in, and an iterative one with two accumulators, which
-   reverses the order unless it reverses at the end. *)
+   reverses the order unless it reverses at the end.
+
+   Decided (D5): each output list must keep the input order, and the
+   question says so.  Browser wording adds: "Each list should keep the
+   numbers in the order they appear in the input", and puts
+   **non-negative** in bold. *)
 
 #use "harness.ml";;
 open Harness
@@ -27,11 +32,7 @@ let meta = {
     family = "not tested: every natural solution is linear";
   };
   placement = Notes;
-  open_questions = [
-    "Must each output list keep the input order? (affects the iterative \
-     two-accumulator solution)";
-    "Where 0 goes is specified (non-negative), but worth emphasising";
-  ];
+  open_questions = [];
 }
 
 module type S = sig
@@ -114,7 +115,7 @@ let tests : (module S) test list = [
   test "mixed (as multisets)" (fun (module M : S) ->
       let ps, ns = M.split [-2; 5; 0; -7; 5] in
       (List.sort compare ps, List.sort compare ns) = ([0; 5; 5], [-7; -2]));
-  test ~kind:(Decision "order kept") "mixed, order kept" (fun (module M : S) ->
+  test "mixed, order kept" (fun (module M : S) ->
       M.split [-2; 5; 0; -7; 3] = ([5; 0; 3], [-2; -7]));
 ]
 

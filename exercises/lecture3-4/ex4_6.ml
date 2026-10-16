@@ -12,7 +12,10 @@
    value has a witness implementation that type-checks against the
    explicitly polymorphic type and returns it; every "impossible" value's
    natural implementation is rejected.  The "with reasons" (parametricity)
-   part is for supervision. *)
+   part is for supervision.
+
+   Decided (D7): the browser version states the caveat explicitly:
+   "assume both calls return normally (no exception, no infinite loop)". *)
 
 #use "harness.ml";;
 open Harness
@@ -25,10 +28,7 @@ let meta = {
   complexity = None;
   placement = Both "the predictions in the notes; the reasons in \
                     supervision";
-  open_questions = [
-    "The question says 'return their results', excluding exceptions and \
-     non-termination; keep that caveat explicit in the browser version.";
-  ];
+  open_questions = [];
 }
 
 let candidates = ["[]"; "[0]"; "[0; 0]"; "[1]"; "[0; 1]"; "[true]"]

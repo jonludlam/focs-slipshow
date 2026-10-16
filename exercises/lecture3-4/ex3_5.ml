@@ -11,7 +11,11 @@
    outer cons cells: O(n) time and space, although the printed result has
    O(n^2) elements.  A version that copies each tail is correct but
    allocates O(n^2), which the Cost test catches.  Good material for the
-   sharing picture in lecture 3 (and a predict-the-allocation question). *)
+   sharing picture in lecture 3 (and a predict-the-allocation question).
+
+   Decided (D3): state it in the question.  Browser wording: "... the list
+   of the tails of its argument, including the list itself and the empty
+   list." *)
 
 #use "harness.ml";;
 open Harness
@@ -29,9 +33,7 @@ let meta = {
   };
   placement = Both "writing in the notes; 'why is this O(n) when the \
                     output has n(n+1)/2 elements?' (sharing) in supervision";
-  open_questions = [
-    "Whether [] is a tail (the example says yes; tails [] = [[]])";
-  ];
+  open_questions = [];
 }
 
 module type S = sig
@@ -96,7 +98,7 @@ let chaffs : (module S) chaff list = [
 let tests : (module S) test list = [
   test "notes' example" (fun (module M : S) ->
       M.tails [1; 2; 3] = [[1; 2; 3]; [2; 3]; [3]; []]);
-  test ~kind:(Decision "[] is a tail") "[]" (fun (module M : S) ->
+  test "[]" (fun (module M : S) ->
       M.tails [] = [[]]);
   test "[5]" (fun (module M : S) -> M.tails [5] = [[5]; []]);
   test "length n+1" (fun (module M : S) ->

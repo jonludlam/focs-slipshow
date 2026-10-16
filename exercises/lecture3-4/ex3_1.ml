@@ -7,7 +7,12 @@
    - [isum]: must be iterative, i.e. tail recursive (FoCS's meaning of
      "iterative"; cf. [summing] in lecture 2 and [addlen] in 3.4).
    The "comment on the improvement" part is for the supervision: both are
-   O(n) time; the gain is O(n) -> O(1) stack space, not time. *)
+   O(n) time; the gain is O(n) -> O(1) stack space, not time.
+
+   Decided (D8): library functions are not allowed, so the point (learning
+   the accumulator pattern) is not sidestepped with List.fold_left.  Checked
+   on the source with [Harness.uses_library]; in the browser, a Typedtree
+   path check. *)
 
 #use "harness.ml";;
 open Harness
@@ -33,6 +38,20 @@ module type S = sig
   val sum : int list -> int
   val isum : int list -> int
 end
+
+(* The wheat's source, checked against the library ban; it must match
+   [Wheat] below. *)
+let wheat_src = {|
+let rec sum = function
+  | [] -> 0
+  | x :: xs -> x + sum xs
+
+let rec go acc = function
+  | [] -> acc
+  | x :: xs -> go (acc + x) xs
+
+let isum xs = go 0 xs
+|}
 
 module Wheat : S = struct
   let rec sum = function
@@ -84,6 +103,23 @@ let chaffs : (module S) chaff list = [
       let rec go acc = function [] -> acc | x :: xs -> x + go acc xs
       let isum xs = go 0 xs
     end : S);
+  chaff "fold-left"
+    ~src:"let rec sum = function [] -> 0 | x :: xs -> x + sum xs\n\
+          let isum xs = List.fold_left ( + ) 0 xs"
+    "Uses List.fold_left: correct and tail recursive, but sidesteps the \
+     accumulator pattern the exercise is about (D8)."
+    (module struct
+      let sum = Wheat.sum
+      let isum xs = List.fold_left ( + ) 0 xs
+    end : S);
+  chaff "stdlib-qualified"
+    ~src:"let rec sum = function [] -> 0 | x :: xs -> x + sum xs\n\
+          let isum xs = Stdlib.List.fold_left ( + ) 0 xs"
+    "Same, written as Stdlib.List.fold_left to get round a naive ban."
+    (module struct
+      let sum = Wheat.sum
+      let isum xs = Stdlib.List.fold_left ( + ) 0 xs
+    end : S);
   chaff "acc-starts-at-one"
     "Starts the accumulator at 1, confusing the initial value with a count."
     (module struct
@@ -105,4 +141,4 @@ let tests : (module S) test list =
   @ [ test ~kind:Tail "isum long list (10^6)" (fun (module M : S) ->
           M.isum long_list = List.fold_left ( + ) 0 long_list) ]
 
-let () = Harness.run meta (module Wheat : S) chaffs tests
+let () = Harness.run ~no_library:wheat_src meta (module Wheat : S) chaffs tests

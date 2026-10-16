@@ -13,7 +13,12 @@
    for each element of xs).  Worst-case family: disjoint inputs.  The
    allocation check can't see comparisons, so the complexity is recorded
    here for the browser's Count check (focs-check, task B4) rather than
-   tested. *)
+   tested.
+
+   Decided (D4): the result is compared as a set (any order); inputs are
+   sets, so duplicates in the inputs are out of scope; no ban on List.mem /
+   List.sort_uniq.  The examples-first version must compare students'
+   expected outputs as sets too. *)
 
 #use "harness.ml";;
 open Harness
@@ -31,14 +36,7 @@ let meta = {
   };
   placement = Both "writing in the notes; 'why O(mn)? how could sorted \
                     lists do better?' in supervision (link to lecture 5)";
-  open_questions = [
-    "Order of the result: the notes say it doesn't matter; tests compare as \
-     sets. Should the examples-first version accept any order?";
-    "Inputs with duplicates (not sets): out of scope, or must union remove \
-     them too?";
-    "Must it use member? A Typedtree check could require the notes' member \
-     and ban List.mem / List.sort_uniq.";
-  ];
+  open_questions = [];
 }
 
 let rec member x = function

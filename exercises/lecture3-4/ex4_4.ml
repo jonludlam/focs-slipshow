@@ -18,7 +18,12 @@
        change raises Failure although the all-ways change finds a solution;
    (b) a till and amount violating an assumption that make change run for
        ever.  Checked with a fuel counter (10^5 calls) rather than a
-       timeout, so it is deterministic and safe in a browser worker. *)
+       timeout, so it is deterministic and safe in a browser worker.
+
+   Decided (D6): keep (b) in the notes, but run it in its own worker, so
+   that a student's non-terminating experiment can be stopped or abandoned
+   without losing the rest of the page.  Needs x-ocaml support for a
+   per-cell (or per-exercise) worker. *)
 
 #use "harness.ml";;
 open Harness
@@ -31,10 +36,7 @@ let meta = {
   complexity = None;
   placement = Both "the two breaking inputs in the notes; listing the \
                     assumptions and their consequences in supervision";
-  open_questions = [
-    "Is (b) worth keeping in the notes? A student's own non-terminating \
-     experiment in the browser needs the worker to be interruptible.";
-  ];
+  open_questions = [];
 }
 
 (* The notes' greedy change (4.6), with a fuel counter. *)

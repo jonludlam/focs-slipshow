@@ -8,9 +8,10 @@ Agent work while Jon is away. Tasks are in AGENT-TASKS.md.
   separate 4.14 js_of_ocaml worker as a proof of concept, and whether to email
   Asai about a public repo, the licence (MIT in opam, but some files are
   patched LGPL compiler sources) and any 5.x plans. See `research/stepper.md`.
-- **C3 (exercises 3–4):** eight specification decisions, D1–D8 in
-  `exercises/lecture3-4/README.md`. The main ones: what `last []` does (3.2),
-  whether order matters in 4.2, and how to word 3.3's "even-numbered".
+- ~~C3 (exercises 3–4): D1–D8~~ **Decided 2026-10-16** and applied (see
+  `exercises/lecture3-4/README.md`).
+- ~~C1 (stepper)~~ **Decided:** try the stepper first, email Asai later. A
+  trial is under way (`research/stepper-trial.md` when done).
 
 ## Log
 
@@ -36,3 +37,13 @@ Agent work while Jon is away. Tasks are in AGENT-TASKS.md.
   `agent-notes`, so a commit made meanwhile (`0dc99d4`, ANIMATIONS.md) landed
   there. `main` has been fast-forwarded to include everything and the branch
   deleted. History is linear and nothing was lost.
+
+### 2026-10-16: decisions D1–D8 applied
+
+- The tests for D1, D3 and D5 are now `Spec` tests. Browser wording for 3.3,
+  3.5, 4.2 and 4.6 is recorded in each file's header.
+- D8: `Harness.uses_library` plus `run ~no_library` add a library ban checked
+  on the source. 3.1 has two new chaffs (`List.fold_left`, and
+  `Stdlib.List.fold_left`) that only the ban catches. `run.sh` is ALL OK.
+- D6 needs x-ocaml to run an exercise in its own worker (passed on to the
+  focs-check work).

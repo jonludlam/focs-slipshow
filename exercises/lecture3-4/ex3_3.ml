@@ -10,7 +10,13 @@
    The specification is polymorphic ('a list -> 'a list).  The checking
    signature is int list -> int list so that the "filter even values" chaff
    type-checks; the tests use values chosen so that position and value
-   parity disagree (e.g. [1;2;3;4] would wrongly pass that chaff). *)
+   parity disagree (e.g. [1;2;3;4] would wrongly pass that chaff).
+
+   Decided (D2): keep the notes' wording, and make it an explicit
+   examples-first question.  Browser wording: "First write examples that pin
+   down what *even-numbered* means; then code the function."  The wheat
+   follows the notes' example (1-based: [a;b;c;d] -> [b;d]), and the
+   zero-based chaff is the misconception the examples should catch. *)
 
 #use "harness.ml";;
 open Harness
@@ -27,9 +33,7 @@ let meta = {
               (about 2 for O(n), 4 for an acc @ [x] version)";
   };
   placement = Notes;
-  open_questions = [
-    "'even-numbered' is 1-based (the example says so); restate it?";
-  ];
+  open_questions = [];
 }
 
 module type S = sig

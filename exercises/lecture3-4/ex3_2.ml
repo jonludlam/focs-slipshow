@@ -8,8 +8,10 @@
    allocates a whole reversed copy: O(n) space.  That makes this a natural
    fix-the-complexity question, checked here by allocation.
 
-   Open: what [last []] should do (see README.md).  Tests use only
-   non-empty lists, except one Decision test. *)
+   Tests use non-empty lists, plus one test that [last []] raises.
+
+   Decided (D1): [last []] must raise some exception; which one is not
+   specified. *)
 
 #use "harness.ml";;
 open Harness
@@ -28,9 +30,7 @@ let meta = {
   placement = Both "writing, the allocation and tail checks in the notes; \
                     'how efficiently, and why can't it be O(1)?' in \
                     supervision";
-  open_questions = [
-    "last []: raise (which exception?), or excluded from the spec entirely";
-  ];
+  open_questions = [];
 }
 
 module type S = sig
@@ -96,7 +96,7 @@ let tests : (module S) test list = [
   test "[1;2;3]" (fun (module M : S) -> M.last [1; 2; 3] = 3);
   test "[4;3;2;1]" (fun (module M : S) -> M.last [4; 3; 2; 1] = 1);
   test "repeated values" (fun (module M : S) -> M.last [5; 5; 9] = 9);
-  test ~kind:(Decision "last [] raises") "[] raises"
+  test "[] raises"
     (fun (module M : S) -> raises (fun () -> M.last []));
   test ~kind:Tail "long list (10^6)" (fun (module M : S) ->
       M.last long_list = List.nth long_list 999_999);

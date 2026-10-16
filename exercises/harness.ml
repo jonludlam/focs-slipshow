@@ -74,9 +74,11 @@ module Harness = struct
 
   let test ?(kind = Spec) name check = { name; kind; check }
 
-  type 'm chaff = { cname : string; desc : string; impl : 'm }
+  (* [src], when given, is the chaff's source text, so that source-level
+     checks (see [uses_library]) can be applied to it. *)
+  type 'm chaff = { cname : string; desc : string; impl : 'm; src : string option }
 
-  let chaff cname desc impl = { cname; desc; impl }
+  let chaff ?src cname desc impl = { cname; desc; impl; src }
 
   (* ---------------------------------------------------------------- *)
   (* Running a single check safely                                      *)
@@ -142,6 +144,21 @@ module Harness = struct
     Sys.remove file;
     ok
 
+  (* Does [src] use library functions it should not?  Type-checks [src]
+     after shadowing the library modules (and [Stdlib] itself, so that
+     [Stdlib.List.fold_left] is caught too) with empty modules.  Operators
+     and functions that are opened by default ([+], [=], [failwith], [@],
+     ...) stay available.  This is the native stand-in for the Typedtree
+     path check planned for the browser (EXERCISES.md section 2). *)
+  let restricted_prelude =
+    String.concat "\n"
+      (List.map (fun m -> "module " ^ m ^ " = struct end")
+         [ "List"; "Array"; "Seq"; "Option"; "Fun"; "String"; "Hashtbl";
+           "ListLabels"; "ArrayLabels"; "Stdlib" ])
+    ^ "\n"
+
+  let uses_library src = typechecks src && not (typechecks (restricted_prelude ^ src))
+
   (* The types the interactive toplevel prints for each phrase of [src]
      (phrases separated by ";;"), e.g. ["'a -> 'a"; "int list list"].
      Used to check type predictions against the real type checker. *)
@@ -201,8 +218,24 @@ module Harness = struct
 
   let failures = ref 0
 
-  let run (meta : meta) (wheat : 'm) (chaffs : 'm chaff list) (tests : 'm test list) =
+  (* [~no_library:wheat_src] turns on the library ban: the wheat's source
+     must not use library functions, and a chaff whose [src] does is caught
+     by the ban. *)
+  let run ?no_library (meta : meta) (wheat : 'm) (chaffs : 'm chaff list) (tests : 'm test list) =
     Printf.printf "== Exercise %s: %s\n" meta.id meta.title;
+    let banned c =
+      match no_library, c.src with
+      | Some _, Some src -> uses_library src
+      | _ -> false
+    in
+    (match no_library with
+     | Some wsrc when uses_library wsrc ->
+         incr failures;
+         Printf.printf "  WHEAT USES LIBRARY FUNCTIONS\n"
+     | Some wsrc when not (typechecks wsrc) ->
+         incr failures;
+         Printf.printf "  WHEAT SOURCE DOES NOT TYPE-CHECK\n"
+     | _ -> ());
     (* The wheat must pass every test. *)
     List.iter
       (fun t ->
@@ -227,6 +260,7 @@ module Harness = struct
               | Raised e -> Some (t.name ^ kind_label t.kind ^ " (" ^ e ^ ")"))
             tests
         in
+        let caught = if banned c then "[ban] uses library functions" :: caught else caught in
         match caught with
         | [] ->
             incr failures;
@@ -239,6 +273,7 @@ module Harness = struct
                   | Decision _ -> true
                   | _ -> run_check t.check c.impl = Pass)
                 tests
+              && not (banned c)
             in
             Printf.printf "  chaff %-22s caught by %d: %s%s\n" c.cname
               (List.length caught)
