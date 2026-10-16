@@ -4,14 +4,11 @@ Agent work while Jon is away. Tasks are in AGENT-TASKS.md.
 
 ## Decisions needed from Jon
 
-- **C1 (stepper):** whether to try running Asai's OCaml 4.14 stepper in a
-  separate 4.14 js_of_ocaml worker as a proof of concept, and whether to email
-  Asai about a public repo, the licence (MIT in opam, but some files are
-  patched LGPL compiler sources) and any 5.x plans. See `research/stepper.md`.
 - ~~C3 (exercises 3–4): D1–D8~~ **Decided 2026-10-16** and applied (see
   `exercises/lecture3-4/README.md`).
-- ~~C1 (stepper)~~ **Decided:** try the stepper first, email Asai later. A
-  trial is under way (`research/stepper-trial.md` when done).
+- ~~C1 (stepper)~~ **Decided:** try the stepper first, email Asai later. The
+  trial is done (`research/stepper-trial.md`): adapt it. Emailing Asai is
+  still open.
 - **A4 (tick tests):** 15 questions about behaviour the ticks leave open, and
   about grading metadata. Short version:
   - negative facr/faci;
