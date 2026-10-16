@@ -12,6 +12,25 @@ Agent work while Jon is away. Tasks are in AGENT-TASKS.md.
   `exercises/lecture3-4/README.md`).
 - ~~C1 (stepper)~~ **Decided:** try the stepper first, email Asai later. A
   trial is under way (`research/stepper-trial.md` when done).
+- **A4 (tick tests):** 15 questions about behaviour the ticks leave open, and
+  about grading metadata. Short version:
+  - negative facr/faci;
+  - `last []`/`butlast []` (the spec's `List.rev (List.tl (List.rev xs))`
+    raises, the model returns `[]`);
+  - out-of-range nth;
+  - gcd on non-positive arguments;
+  - n = 0 in sumt/eapprox/exp (the models disagree: 0.0 vs 1.0);
+  - choose with k > n or repeated elements;
+  - remove of an absent key;
+  - `power 0 0`;
+  - whether merge must be lazy;
+  - rescale's q for non-square images;
+  - the Tick 5 line-drawing test cell isn't an autograder cell (and the
+    line/drawLine solutions are "manually graded");
+  - whether to apply the new tests to ticks already released.
+
+  Full list in the A1–A4 report (handed back to the lead agent; summary
+  under Log below).
 
 ## Log
 
@@ -47,3 +66,34 @@ Agent work while Jon is away. Tasks are in AGENT-TASKS.md.
   `Stdlib.List.fold_left`) that only the ban catches. `run.sh` is ALL OK.
 - D6 needs x-ocaml to run an exercise in its own worker (passed on to the
   focs-check work).
+
+### 2026-10-16: A1–A4 (tick tests and chaffs)
+
+Done in `~/devel/focs` on branch `chaffs` (four commits, new files only, all
+under `chaffs/`). Jon's uncommitted notebook changes haven't been touched.
+
+- **A1:** all 10 uncommitted notebook diffs change **source**, not just
+  outputs: the grade cells move from `assert` to `Focs.Test`.
+  - Extra changes: Tick 1 gains an empty code cell; Tick 2's kernelspec goes
+    from 4.10 to 4.14; Tick 5's toPPM test gains two cases; Tick 5*'s compute
+    cell gains a real 2×2 reference test.
+  - Everything was tested against the working-tree versions.
+- **A2:** `chaffs/harness.py` runs every code cell in a fresh toplevel with a
+  stand-in `focs` library (`chaffs/support/`, with a stub
+  `Jupyter_notebook`). **All 10 model solutions pass.** A full run takes
+  about 6 minutes.
+- **A3:** 176 misconception chaffs, 4 structural chaffs and 33 alternative
+  wheats across 34 questions (`chaffs/tickN/*.ml`, each with a one-line
+  description).
+- **A4:**
+  - With the current grade cells, **48 of 176 chaffs survive**, including:
+    - Tick 2 `nth _ n = n+1`, last = max, butlast = first three;
+    - Tick 5's shared-rows aliasing bug, which the question itself warns
+      about;
+    - Tick 4's nfold, which is never tested at all.
+  - The proposed grade cells (`chaffs/proposed/`,
+    `chaffs/proposed-tests.patch`, which applies with `git apply`) leave
+    **1 survivor**: Tick 4* `merge` that forces tails eagerly. Catching it
+    needs a laziness test, which is a decision for Jon.
+  - With the proposed cells, all 10 models and all 33 wheats still pass.
+  - Per-question table: `chaffs/results.md`.
