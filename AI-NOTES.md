@@ -211,9 +211,35 @@ which can change.
   [Fall 2026 syllabus](https://cs50.harvard.edu/college/2026/fall/syllabus/).
   - Only CS50's own Duck ([cs50.ai](https://cs50.ai)) may be used, except on
     the final project. Quizzes in lectures are worth 45%.
-  - Papers: [SIGCSE 2024 rollout](https://cs.harvard.edu/malan/publications/V1fp0567-liu.pdf),
-    [SIGCSE 2025 "Improving AI in CS50"](https://cs.harvard.edu/malan/publications/fp0627-liu.pdf).
-    *The results haven't been checked first-hand.*
+  - [SIGCSE 2024, "Teaching CS50 with AI"](https://cs.harvard.edu/malan/publications/V1fp0567-liu.pdf)
+    ([DOI](https://doi.org/10.1145/3626252.3630938)): the rollout in Summer
+    and Fall 2023, using GPT-4 with "pedagogical guardrails" and retrieval over
+    lecture captions. **The evidence is surveys and usage logs, with no measure
+    of learning.**
+    - Fall 2023 surveys of about 500 on-campus students: 47% found the tools
+      "very helpful" and 6% "not helpful". At the end of term 78% used them
+      "frequently" or "constantly", and 86% "liked" or "loved" them.
+    - Accuracy, checked by one staff member: 88% (22/25) of the Duck's
+      curricular answers on the Ed forum were correct in Summer 2023. In
+      Fall 2023 staff endorsed only 39% (70/180), which the authors think
+      understates accuracy.
+    - **Students stopped asking humans on the forum:** 0.89 questions per
+      student in Fall 2022 against 0.28 in Fall 2023.
+  - [SIGCSE 2025, "Improving AI in CS50"](https://cs.harvard.edu/malan/publications/fp0627-liu.pdf)
+    ([DOI](https://doi.org/10.1145/3641554.3701945)): about the tutor's
+    behaviour, not about students.
+    - **The Duck gives away code despite its instructions.** Of 10 million
+      messages, 22% contained code blocks, and 48% of conversations did.
+      Switching from GPT-4 to GPT-4o raised the message rate from 20% to 25%.
+      They call this "instruction dilution": long system prompts get ignored.
+    - TFs compared the existing prompt with one that asks leading questions.
+      Overall they were split. TFs who had taught before the Duck preferred the
+      Socratic version more often.
+    - In Fall 2024, 72 TFs judged multi-turn conversations. Versions with
+      few-shot examples or fine-tuning on **just 50 curated tutor
+      conversations** beat the original about 60% of the time.
+    - The conclusion's claim that the tools "significantly enhanced student
+      learning" isn't backed by any learning measure in either paper.
   - [Harvard Gazette, Sep 2026](https://news.harvard.edu/gazette/story/2026/09/taming-the-duck-for-starters/):
     Malan calls the Duck a "net positive". It sometimes emitted code anyway,
     a rate limit was added, and office-hour queues have largely disappeared.
@@ -282,8 +308,27 @@ which can change.
   found.
 - Nothing found for Northeastern/HtDP, or for Edinburgh, Imperial, Oxford,
   ETH, Delft or Aalto intro courses.
-- Background: Lau & Guo, "From 'Ban It Till We Understand It' to 'Resistance
-  is Futile'" (ICER 2023), a survey of instructors. *Not read.*
+- Background: Lau & Guo, ["From 'Ban It Till We Understand It' to 'Resistance
+  is Futile'"](https://pg.ucsd.edu/publications/cs-instructors-adapting-to-chatgpt-copilot-ai-tools_ICER-2023.pdf)
+  (ICER 2023, [DOI](https://doi.org/10.1145/3568813.3600138)). Interviews
+  with 20 intro programming instructors in 9 countries, in early 2023. It's a
+  snapshot from before anyone had a plan, now mostly of historical interest.
+  - **All 20 raised cheating unprompted.** 14 of 20 were already changing
+    their courses that term: giving exams more weight (7), adding bans (4), or
+    showing students where the tools fail (3).
+  - Over the longer term they split two ways:
+    - *Resist:* teach the fundamentals first (the calculator and hand-tools
+      analogies, and "fragile knowledge"). Ideas included bespoke starter code
+      to make assignments "AI-proof", paper exams, oral or video explanations
+      of code, and grading the process.
+    - *Embrace:* prepare students for jobs, cover more design in CS1, and
+      **shift towards reading, critiquing and testing code** ("good editors
+      rather than just writers"). Also open-ended projects, and students
+      working with AI as "clients".
+  - Some who banned AI in CS1 wanted it in upper-year courses.
+  - Their open questions include moving beyond autograded assignments,
+    efficacy studies, and IDEs designed to encourage critique over
+    generation.
 
 ### Computing-education researchers
 
@@ -326,8 +371,36 @@ which can change.
     final, even after controlling for an earlier exam.
 - **"Beyond the Hype"** (ITiCSE 2024 working-group report, published 2025):
   <https://doi.org/10.1145/3689187.3709614>, [arXiv](https://arxiv.org/abs/2412.14732).
-  A large review of research, teaching practice and tools. *Only the abstract
-  has been read so far.*
+  It combines a systematic review of 71 papers up to May 2024, a survey of 76
+  educators and 39 developers, and 17 interviews with tool builders and
+  educators. It describes practice rather than measuring learning, and the
+  data are from 2024. What matters for CS1:
+  - **Most studies are of unsupervised use**, such as homework, and most
+    gave students ChatGPT with no instruction on how to use it (49 of 70).
+    The authors flag likely publication bias towards positive results.
+  - **Guidance or guardrails both help.** With a general tool and no guidance,
+    55% (12/22) of studies reported positive results; with a guardrailed
+    custom tool and no guidance, 73% (19/26). Hence the main recommendation:
+    either teach students how to use general tools, or give them course tools
+    with pedagogical guardrails.
+  - Studies using AI to help **understand code** were more often positive than
+    those using it for hints or writing code.
+  - **Educators are moving marks to invigilated work.** 77% think the skills
+    needed to write software have changed, but only 36% have changed their
+    course to include GenAI, and 22% ban it. The open-ended answers describe
+    more proctored quizzes, paper exams, **oral exams** ("now a vital part of
+    student assessment"), exam minimums, and marking the process rather than
+    the final code.
+  - **Skills they expect to matter more:** problem understanding, reading code
+    and problem decomposition were ranked top. Testing and debugging rise too.
+    Developers added critically evaluating AI output, and meticulousness.
+  - Educators who ban GenAI give two reasons: they don't know the tools well
+    enough, and students should learn the basics unaided first. The report says
+    whether that is pedagogically sound is an open question.
+  - From the interviews: more cheating and **students arriving unprepared for
+    exams**, but responsible users "accomplish more than traditionally
+    possible". Students like being able to ask questions without peers seeing.
+  - Equity: paid tools cost about $1,000 over a degree.
 - **Prompt Problems:** students write a prompt, which counts as correct when
   the generated code passes the tests. This trains specification rather than
   coding. Evidence is from small deployments and is mostly about student
@@ -418,8 +491,39 @@ protection.**
     unacknowledged AI content in summative work is misconduct unless the
     brief says otherwise. Don't use AI detectors; require declarations
     instead.
-  - There is separate guidance on GenAI in supervisions, which hasn't been
-    read yet.
+  - [Undergraduate supervisor guidance on the use of AI](https://www.seniortutors.admin.cam.ac.uk/files/supervisor_ai_guidance.pdf)
+    (Senior Tutors' Committee, approved 16 Feb 2024). The link from the
+    [GenAI and education](https://blendedlearning.cam.ac.uk/artificial-intelligence-and-education/generative-ai-and-education)
+    page now returns 404, so this was read from the
+    [Wayback copy of June 2025](http://web.archive.org/web/20250601200740/https://www.seniortutors.admin.cam.ac.uk/files/supervisor_ai_guidance.pdf).
+    There is also a Raven-only SharePoint copy (UoC_SupportingSupervisions),
+    *not checked, and it may be newer*. The guidance:
+    - **"Supervisors should not prohibit the use of AI in work produced for
+      supervisions but require students to clearly state when AI has been
+      utilised."**
+    - Using AI output "indiscriminately or inappropriately" counts as
+      misconduct. Allowed uses include explaining new concepts, acting as "a
+      collaborative coach to problem solve", and self-testing.
+    - It warns that "extensive use can limit a student's ability to learn and
+      make them unprepared for formal assessments".
+    - Don't rely on AI detectors.
+    - Supervisors should engage students on how to use AI well, partly so
+      they see its flaws.
+    - Schools, departments and colleges may vary it locally.
+  - **The department's own [AI policy](https://www.cst.cam.ac.uk/files/ai_policy.pdf)**
+    (Faculty Board, 15 Oct 2024), for assessed work, **ticks included**:
+    - AI is not allowed in exams unless explicitly permitted.
+    - Local tools such as spell-checkers, grammar assistants and debugging aids
+      are allowed without declaring them. Beyond that, AI output must not be
+      presented as the student's own, "either taken directly or paraphrased",
+      unless the syllabus page explicitly allows it. Ticks need a signed
+      honesty-code cover sheet.
+    - Using AI for background research and understanding is always allowed.
+    - Unlike the University's advice, it says **examiners may use AI-detection
+      software**, and a suspected case may lead to a viva.
+    - So the FoCS syllabus page is where any permitted use on ticks would have
+      to be stated. Supervision work isn't assessed, so the supervisor
+      guidance above applies to it.
 
 ---
 
@@ -434,12 +538,15 @@ protection.**
 2. **Students must explain their own code.** Examples: MIT's checkoffs,
    COS326's debriefs, CS61A's Preceptor with staff as fallback. Cambridge
    supervisions already provide this, if supervisors are asked to use them
-   that way.
+   that way. University guidance already says supervisors shouldn't ban AI in
+   supervision work but should require students to declare it.
 3. **How students use AI matters more than whether they have access.**
    Delegating hurts learning, especially debugging (Anthropic RCT) and exam
    performance (Bastani). Asking for explanations, or using tutors with
    guardrails, largely doesn't hurt. Course-owned tutors (CS50's Duck,
-   CS61A's Preceptor, CodeHelp) follow this logic.
+   CS61A's Preceptor, CodeHelp) follow this logic. "Beyond the Hype" finds
+   the same: studies with guidance or guardrails were more often positive.
+   But guardrails leak: 22% of the CS50 Duck's messages contained code.
 4. **Weaker students are at more risk** ("The Widening Gap", Dagstuhl). The
    evidence is mixed (Kazemitabaar), but the direction is consistent.
 5. **Specification, testing, reading and evaluating code matter more**, and
@@ -464,7 +571,17 @@ protection.**
 
 ## Gaps in these notes
 
-- Not read: "Beyond the Hype" (the full report), the CS50 papers' results,
-  Lau & Guo 2023, and Cambridge's guidance on GenAI in supervisions.
+- Now read first-hand (2026-10-16): "Beyond the Hype", both CS50 papers,
+  Lau & Guo 2023, the University's supervisor guidance (Feb 2024, via the
+  Wayback Machine) and the department's AI policy (Oct 2024).
+- Still open:
+  - Whether the supervisor guidance has been updated since Feb 2024. The live
+    link is dead, and the SharePoint copy needs Raven.
+  - Whether the department's tick rules have changed since Oct 2024.
+  - CS50 has published nothing that measures learning (as opposed to
+    satisfaction or tutor behaviour). Its later papers haven't been searched
+    for.
+  - "Beyond the Hype" covers the literature only up to May 2024. A newer
+    systematic review would be worth finding.
 - Brown 0111-E (Fall 2026) and CS61A's agents unit are running now, so their
   results are worth watching for.
