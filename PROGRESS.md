@@ -32,6 +32,19 @@ Agent work while Jon is away. Tasks are in AGENT-TASKS.md.
   Full list in the A1–A4 report (handed back to the lead agent; summary
   under Log below).
 
+- **B (focs-check), from `~/devel/x-ocaml-focscheck/FOCS-CHECK-NOTES.md`:**
+  - Count's cost model: List functions cost a step per element, sorts a
+    step per comparison; Array/Hashtbl/String are not counted (ban them).
+  - Per-exercise workers (D6): a second x-ocaml script with its own
+    `elt-name` already gives an exercise its own worker (tested); a
+    `data-worker` attribute within one page is ~100-150 lines in
+    `src/page.ml`. Should such cells see the page's hidden cells?
+  - Take the module-alias worker fix (commits `Tests: a module alias stops
+    the worker`, `Worker: a module alias no longer stops it`) onto
+    `widgets-on-displays` on its own?
+  - The browser's stack allows only ~6300 frames of `nsum`: students'
+    non-tail recursion over 10^4 elements fails there.
+
 ## Log
 
 ### 2026-10-16: C1–C3
@@ -112,3 +125,33 @@ under `chaffs/`). Jon's uncommitted notebook changes haven't been touched.
 - Verdict: adapt it, with a library patch (about 28 lines), a step callback,
   a step filter and our own printer. Questions for Asai are listed in the
   file, for when Jon decides to email.
+
+### B1-B6 (x-ocaml-focscheck, branch `focs-check`)
+
+Full notes, measurements and open questions:
+`~/devel/x-ocaml-focscheck/FOCS-CHECK-NOTES.md`. In short:
+
+- B1: warning 51 fires in the browser on both workers, exactly as
+  natively (`test/test_tailcall.html`). As an error it is reported, but the
+  toplevel still defines the function (natively too).
+- B2: deepest `nsum` ~6309 (plain) / 6000-7000 (effects); `nsum 100_000`
+  overflows, `summing` survives 10^7 on both, so the lecture demo works.
+  The effects worker does not grow the stack through closures or
+  `List.fold_right`, and catching `Stack_overflow` there is unreliable.
+- B3: `X_ocaml_lib.source "id"`, and `Focs_check.load ~as_:"Student"
+  "rev-ex"`: isolated load with diagnostics at page lines
+  (`test/test_check.html`). Found and fixed a worker crash on module
+  aliases.
+- B4: `focs-check/core` (Tailcheck, Count, Growth, Ban, Examplar), native
+  unit tests all pass (nrev/rev, nsum/summing, power, insertion sort
+  sorted/reversed, mergesort, fib, cubic); `Focs_check` in cells,
+  `test/test_focs_check.html` on both workers. D8's `Forbid_library` added.
+- B5: `examples/examplar.html` (last, butlast, nth with tick 2's chaffs),
+  checked by `test/test_examplar.html`.
+- B6: `<x-stepper>` (`examples/elements/stepper.js`) with predict and
+  lecture modes and `step()`/`back()`/`reset()` for slips;
+  `Focs_check.Steps`; `test/test_stepper.html`, `examples/predict.html`
+  (rev with accumulator; pre/in/postorder).
+- Full browser suite: every page passes except `test_ui.html`, which
+  timed out before this work too.
+
