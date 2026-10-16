@@ -97,3 +97,18 @@ under `chaffs/`). Jon's uncommitted notebook changes haven't been touched.
     needs a laziness test, which is a decision for Jon.
   - With the proposed cells, all 10 models and all 33 wheats still pass.
   - Per-question table: `chaffs/results.md`.
+
+### 2026-10-16: stepper trial (S1)
+
+- `research/stepper-trial.md`. Asai's stepper builds natively (4.14.2) and
+  with js_of_ocaml 6.4.1 (a separate scratch switch). It runs under node:
+  3.1 MB, or 617 KB gzipped with the stdlib .cmi files, at 10–20 ms per run.
+- Keeping only the steps whose redex is a function call reproduces the
+  notes' traces for nsum, summing, nrev, rev_app and change (with nested
+  try).
+- Problems: evaluation is right to left (so preorder visits C before B),
+  there's a bug with `function` + `when` guards, and no support for loops,
+  mutable fields or `lazy`. It's OCaml 4.14 only.
+- Verdict: adapt it, with a library patch (about 28 lines), a step callback,
+  a step filter and our own printer. Questions for Asai are listed in the
+  file, for when Jon decides to email.
