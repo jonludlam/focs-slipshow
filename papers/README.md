@@ -51,23 +51,18 @@ this list is. Every file was checked to be the paper named.
 | `31-goldsmith-aiken-wilkerson-2007-empirical-complexity.pdf` | trend-prof: fitting operation counts against input size. The idea behind `focs-check`'s Count and Growth. |
 | `32-hoffmann-das-weng-2017-raml-ocaml.pdf` | RAML: static resource bounds for OCaml. The road not taken, explained in `EXERCISES.md` §4. |
 
-## Not downloaded (paywalled, or the download was blocked)
+## Visualisation, prediction and guardrails (downloaded through Cambridge access)
 
-- Bastani et al., "Generative AI without guardrails can harm learning",
-  PNAS 2025, <https://doi.org/10.1073/pnas.2422633122> (PNAS refused the
-  download; SSRN version: <https://papers.ssrn.com/abstract=4895486>).
-  Unrestricted GPT-4: +48% in practice, −17% on the exam. A tutor that only
-  gives hints mostly avoided the harm.
-- Crouch, Fagen, Callan, Mazur, "Classroom demonstrations: learning tools or
-  entertainment?", Am. J. Phys. 2004, <https://doi.org/10.1119/1.1707018>.
-  Predicting before a demonstration helps; only watching doesn't. This
-  supports predict-the-step.
-- Hundhausen, Douglas, Stasko, meta-study of algorithm visualisation, JVLC
-  2002, <https://doi.org/10.1006/jvlc.2002.0237>.
-- Naps et al., the engagement taxonomy, ITiCSE WG 2002,
-  <https://doi.org/10.1145/960568.782998>.
-- Sorva, Karavirta, Malmi, a review of program visualisation systems, TOCE
-  2013, <https://doi.org/10.1145/2490822>.
+| File | Why |
+|---|---|
+| `33-bastani-et-al-2025-generative-ai-can-harm-learning.pdf` | Field RCT with about 1,000 high-school maths students. Unrestricted GPT-4: +48% in practice, −17% on the unaided exam. A tutor that only gives hints mostly avoided the harm. **The PDF's header says "See correction for this article"**: check the correction on [the PNAS page](https://doi.org/10.1073/pnas.2422633122) before quoting numbers. |
+| `34-crouch-et-al-2004-classroom-demonstrations.pdf` | Students who only watched a demonstration did no better than those who never saw it. Those who predicted first did better. The case for predict-the-step. |
+| `35-hundhausen-douglas-stasko-2002-av-meta-study.pdf` | Meta-study of 24 experiments: how students use an algorithm visualisation matters more than what it shows. |
+| `36-naps-et-al-2002-engagement-taxonomy.pdf` | The engagement taxonomy (no viewing, viewing, responding, changing, constructing, presenting). |
+| `37-sorva-karavirta-malmi-2013-program-visualization-review.pdf` | Review of program visualisation systems for intro programming (64 pages). Mostly passive animation, and little evidence on engagement. |
+
+## Not read, but worth knowing about
+
 - Not a paper, but short and worth reading: Regehr, "Zero
   Degrees-of-Freedom Programming",
   <https://john.regehr.org/writing/zero_dof_programming.html>.
