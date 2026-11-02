@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FoCS experiments</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>FoCS experiments</h1>
+
+  <p>Experiments for teaching <a href="https://www.cl.cam.ac.uk/teaching/2627/FoundsCS/">Foundations
+    of Computer Science</a>, the first-year functional programming course in
+    OCaml at Cambridge. Everything runs in your browser: OCaml is compiled to
+    JavaScript, and the checks run on your machine, with no server. These are
+    prototypes, not course material.</p>
+
+  <ul>
+    <li><a href="focs-demos.html">Exercises that check more than answers</a>:
+      whether a function is tail recursive, how its work grows as the input
+      doubles, whether it uses a library function it shouldn't, and finding an
+      input that tells two functions apart.
+      (<a href="focs-demos-solved.html">With the answers filled in.</a>)</li>
+    <li><a href="examplar.html">Examples first</a>: write examples of what a
+      function should do; they are checked against hidden correct versions,
+      and against wrong ones made from common mistakes, after
+      <a href="https://cs.brown.edu/~sk/Publications/Papers/Published/wk-examplar/">Examplar</a>.</li>
+    <li><a href="predict.html">Predict the next step</a>: box-and-pointer
+      diagrams of <code>rev</code> with an accumulator and of tree traversals,
+      where you choose the next state before it is shown.</li>
+    <li><a href="../stepper/">Stepping OCaml</a>: Kenichi Asai's
+      <a href="http://pllab.is.ocha.ac.jp/~asai/Stepper/">stepper</a>
+      (Ochanomizu University), compiled to run in the page, with the course
+      notes' examples and a mode where you type the next step first.</li>
+  </ul>
+
+  <p>Built on <a href="https://github.com/art-w/x-ocaml">x-ocaml</a>.
+    Jon Ludlam, November 2026.</p>
+</body>
+</html>

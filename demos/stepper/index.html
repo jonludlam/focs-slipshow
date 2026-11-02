@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FoCS Stepper</title>
+<title>Stepping OCaml</title>
 <style>
   :root {
     --bg: #fbfaf7; --card: #ffffff; --ink: #1f1d1a; --muted: #6b665e; --rule: #e3dfd6;
@@ -47,6 +47,9 @@
   .verdict { font-size: 0.9rem; margin-top: 6px; min-height: 1.4em; }
   .verdict.good { color: var(--good); } .verdict.bad { color: var(--bad); }
   .error { color: var(--bad); font-family: var(--mono); font-size: 13px; white-space: pre-wrap; }
+  .credit { background: var(--card); border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 8px; padding: 10px 14px; margin: 0 0 18px; max-width: 80ch; }
+  .credit p { margin: 4px 0; }
+  .credit a { color: var(--accent); }
   .notes { font-size: 0.85rem; color: var(--muted); margin-top: 18px; }
   .notes li { margin: 2px 0; }
   kbd { font-family: var(--mono); font-size: 0.8em; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: 0 4px; }
@@ -55,8 +58,22 @@
 <body>
 <main>
   <h1>Stepping OCaml, in the browser</h1>
-  <p class="lede">Kenichi Asai's stepper (Ochanomizu), compiled with js_of_ocaml and
-    running entirely in this page. Pick an example from the notes or write
+  <div class="credit">
+    <p><strong>This is Kenichi Asai's stepper, not ours.</strong> It was written
+      at Ochanomizu University by Tsukino Furukawa, Youyou Cong and Kenichi
+      Asai. Its home is
+      <a href="http://pllab.is.ocha.ac.jp/~asai/Stepper/">pllab.is.ocha.ac.jp/~asai/Stepper</a>,
+      and it's described in
+      <a href="https://arxiv.org/abs/1906.11422">Stepping OCaml</a> (TFPIE 2018).</p>
+    <p>Here it is compiled to JavaScript from the
+      <a href="http://pllab.is.ocha.ac.jp/~asai/Stepper/4.14.2/stepper.tar.gz">4.14.2
+      release</a>, with small changes so it runs in a page: its output
+      goes to a buffer, and the reducing part is marked. Its opam file says
+      MIT licence; the parts copied from the OCaml compiler are LGPL 2.1
+      with the OCaml linking exception. Problems with this page are ours,
+      not Asai's.</p>
+  </div>
+  <p class="lede">It runs entirely in this page. Pick an example from the notes or write
     your own, then step through it. With <em>predict</em> on, you say what
     the next line is before you see it. The <span class="redex">yellow</span>
     part is what reduces next, and the <span class="reduct">green</span>
