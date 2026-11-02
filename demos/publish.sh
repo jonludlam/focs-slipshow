@@ -6,7 +6,8 @@
 # It holds the FoCS demos from x-ocaml's focs-check branch, with a release
 # build of x-ocaml, and Asai's stepper (demos/stepper; stepper_web.js isn't
 # in git: see research/stepper-trial.md).  Left out on purpose:
-#   - the T9 pages (a possible tick: the answers are in the page);
+#   - the T9 pages (a possible tick: the answers are in the page; they are
+#     in the private focs-assignments repo, branch t9);
 #   - test pages.
 set -eu
 
