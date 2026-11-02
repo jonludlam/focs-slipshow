@@ -2,6 +2,12 @@
 
 How to start them, and what to look at.
 
+**Published** (2 Nov 2026) at <https://jon.ludl.am/experiments/focs/>: the
+checked exercises, examples first, predict-the-step and the stepper, made
+by `demos/publish.sh` and copied up with
+`rsync -a --chmod=D755,F644 OUT/ jon@jon.ludl.am:/var/www/jon.ludl.am/experiments/focs/`.
+The T9 pages are deliberately not published.
+
 ## 1. Checked exercises, Examplar and predict-the-step (x-ocaml)
 
     cd ~/devel/x-ocaml-focscheck && dune build && node test/serve.js 8811
